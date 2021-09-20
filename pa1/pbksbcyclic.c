@@ -9,6 +9,8 @@ typedef struct {
     int *c, n, p, pid;
 } GM;
 
+pthread_mutex_t lock;
+
 void *
 pbksb(void *varg) {
     GM *arg = varg;
@@ -22,12 +24,13 @@ pbksb(void *varg) {
     n = arg->n;
     p = arg->p;
     pid = arg->pid;
-    block = n / p;
-    start = block * pid;
-    end = start + block - 1;
+    //block = n / p;
+    start = pid;
+    end = n - p + pid;
+    // change the while loop for cyclical use (currently waits until n-1 to end is all calculated)
     for(j = n - 1; j > end; j--)
         while(c[j] == 0);
-    for(i = end; i >= start; i--) {
+    for(i = end; i >= start; i-=p) {
         sum = b[i];
         for(j = n - 1; j > i; j--)
             sum -= a[i][j] * b[j];
@@ -45,6 +48,10 @@ main(int argc, char **argv) {
     if(argc != 3) {
         printf("Usage: pbksb n p\nAborting...\n");
         exit(0);
+    }
+    if (pthread_mutex_init(&lock, NULL) != 0) {
+        printf("\n mutex init has failed\n");
+        return 1;
     }
     n = atoi(argv[1]);
     p = atoi(argv[2]);
@@ -84,8 +91,17 @@ main(int argc, char **argv) {
     time = time / BILLION;
     
     printf("Elapsed time: %lf seconds\n", time);
+    for(i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            printf("%lf ", a[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+
     for(i = 0; i < n; i++)
         printf("%lf ", b[i]);
     printf("\n");
     return 0;
 }
+

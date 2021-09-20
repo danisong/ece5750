@@ -3,8 +3,7 @@
 #include <time.h>
 #define BILLION 1000000000L
 
-void
-bksb(double **a, double *b, int n) {
+void bksb(double **a, double *b, int n) {
     register int i, j, end;
     register double sum;
     end = n - 1;

@@ -12,7 +12,7 @@ typedef struct {
 void *
 pbksb(void *varg) {
     GM *arg = varg;
-    register int i, j, start, end;
+    register int i, j, k, start, end;
     register double sum;
     int pid, block, n, p, *c;
     double **a, *b;
@@ -25,14 +25,23 @@ pbksb(void *varg) {
     block = n / p;
     start = block * pid;
     end = start + block - 1;
-    for(j = n - 1; j > end; j--)
+    for(j = n - 1; j > end; j--) {
         while(c[j] == 0);
+        for (k = start; k <= end; k++) {
+            b[k] -= a[k][j]*b[j];
+        }
+    }
     for(i = end; i >= start; i--) {
-        sum = b[i];
-        for(j = n - 1; j > i; j--)
-            sum -= a[i][j] * b[j];
-        b[i] = sum / a[i][i];
+        //sum = b[i];
+        // for(j = n - 1; j > i; j--)
+        //     sum -= a[i][j] * b[j];
+        //b[i] = sum / a[i][i];
+        b[i] = b[i] / a[i][i];
         c[i] = 1;
+        for (k = start; k < i; k++) {
+            b[k] -= a[k][i]*b[i];
+        }
+
     }
     return NULL;
 }
@@ -84,8 +93,9 @@ main(int argc, char **argv) {
     time = time / BILLION;
     
     printf("Elapsed time: %lf seconds\n", time);
-    for(i = 0; i < n; i++)
+    for(i = 0; i < n; i++) {
         printf("%lf ", b[i]);
-    printf("\n");
+    }
     return 0;
 }
+
