@@ -28,7 +28,7 @@ pbksb(void *varg) {
     for(j = n - 1; j > end; j--) {
         while(c[j] == 0);
         for (k = start; k <= end; k++) {
-            b[k] -= a[k][j]*b[j];
+            b[k] -= a[j][k]*b[j];
         }
         // for (k = pid; k < j; k += p) {
         //     b[k] -= a[k][j]*b[j];
@@ -38,7 +38,7 @@ pbksb(void *varg) {
         b[i] = b[i] / a[i][i];
         c[i] = 1;
         for (k = start; k < i; k++) {
-            b[k] -= a[k][i]*b[i];
+            b[k] -= a[i][k]*b[i];
         }
         // for (k = pid; k < i; k += p) {
         //     b[k] -= a[k][i]*b[i];
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     }
     for(i = 0; i < n; i++) {
         for(j = i; j < n; j++) {
-            a[i][j] = count;
+            a[j][i] = count;
             count++;
         }
     }
