@@ -30,9 +30,6 @@ pbksb(void *varg) {
         for (k = start; k <= end; k++) {
             b[k] -= a[k][j]*b[j];
         }
-        // for (k = pid; k < j; k += p) {
-        //     b[k] -= a[k][j]*b[j];
-        // }
     }
     for(i = end; i >= start; i--) {
         b[i] = b[i] / a[i][i];
@@ -40,9 +37,6 @@ pbksb(void *varg) {
         for (k = start; k < i; k++) {
             b[k] -= a[k][i]*b[i];
         }
-        // for (k = pid; k < i; k += p) {
-        //     b[k] -= a[k][i]*b[i];
-        // }
     }
     return NULL;
 }
